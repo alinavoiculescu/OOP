@@ -1,0 +1,54 @@
+#include <iostream>
+
+using namespace std;
+
+/// C/C++ - clase
+
+class Masina
+{
+    int *v;
+    string marca;
+    int viteza;
+public:
+    string get_marca(){return marca;};
+    int get_viteza(){return viteza;}
+    void set_marca(string);
+    /*CONSTRUCTORI:*/
+///    Masina(); ///constructor de initializare fara parametri
+///    Masina(string); ///constr parametrizat cu 1 parametru
+///    Masina(string, int); ///constr parametrizat cu 2 parametri
+    Masina(string s = "Dacia", int n = 200) ///constr parametrizat cu 2 parametri si cu valori implicite
+    {
+        marca = s;
+        viteza = n;
+        v = new int[100];
+    }
+    Masina(int, string);
+
+    ///DESTRUCTORI:
+    ~Masina(){cout<<"Destructor "<<marca<<endl; delete[] v;}
+};
+
+
+Masina::Masina(int n, string s)
+{
+    marca = s;
+    viteza = n;
+}
+
+void Masina::set_marca(string x)
+{
+    marca = x;
+}
+
+int main()
+{
+    Masina A;
+    cout<<A.get_marca()<<" "<<A.get_viteza()<<endl;
+    Masina B("Audi");
+    cout<<B.get_marca()<<" "<<B.get_viteza()<<endl;
+    Masina C("BMW", 300);
+    cout<<C.get_marca()<<" "<<C.get_viteza()<<endl;
+    Masina D(400, "Tico");
+    cout<<D.get_marca()<<" "<<D.get_viteza()<<endl;
+}

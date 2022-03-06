@@ -1,0 +1,26 @@
+#pragma once
+
+class List{
+    class nod{
+        int val;
+        nod *urm = NULL;
+        
+        public:
+            nod(int, nod*);
+            friend class List;
+    };
+    
+    nod *p;
+    nod *ult;
+    int nrnod;
+    
+    public:
+        List();
+    
+        List(unsigned int, int);
+        ~List();
+        
+        void Add(int);
+
+};
+

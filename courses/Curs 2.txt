@@ -1,0 +1,62 @@
+Private: -clasa respectiva, dar nu in mosteniri si nici in main
+Protected: -clasa respectiva+mosteniri, dar nu in main
+Public: -peste tot
+
+Agregare/compunere: class Profesor; class Curs{Profesor p;}
+
+Mostenire:
+-clasa de baza, clasa derivata
+-incorporarea componentelor unei clase in alta
+-refolosire de cod
+-clasa derivata contine toate el clasei de baza, dar mai adauga si alte elemente
+
+#include <iostream>
+
+using namespace std;
+
+class Test
+{
+    int x,y;
+public:
+    /*Test(){x = 12;y = 34;}
+    Tesr(int a) {x=a; y=34;}
+    Test(int a, int b) {x=a; x=b;}*/ //supraincarcare de fct
+
+    Test(int a = 12, int b = 34) {x=a;y=b;} //valori implicite
+
+    ~Test(){cout<<"Destructor "<<x<<" "<<y<<endl;}
+
+    void citire();
+    void afisare();
+};
+
+/*MOSTENIRE
+class Examen : public Test
+{
+public:
+    void citire(){ cin>>x; }
+};*/
+
+int main()
+{
+    Test ob;
+    Test ob1(100);
+    Test ob2(1,2);
+    ob.afisare();
+    ob1.afisare();
+    ob2.afisare();
+
+    /*Examen e;
+    e.citire();*/
+}
+
+
+    void Test::citire()
+    {
+        cin>>x>>y;
+    }
+
+    void Test::afisare()
+    {
+        cout<<x<<" "<<y<<endl;
+    }

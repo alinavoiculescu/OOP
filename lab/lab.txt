@@ -1,0 +1,206 @@
+#include <iostream>
+
+using namespace std;
+
+class masina;
+class automobil
+{
+///protected:
+    static int nra;
+    string marca;
+    float cap;
+    public:
+    automobil();
+    automobil(string);
+    automobil(string, float);
+    automobil(const automobil&);
+    ~automobil() {cout<<"\ndestructor baza\n";}
+    automobil& operator= (automobil&);
+    virtual void afis(){cout<<marca<<"  "<<cap<<"\n";}
+    friend istream& operator>>(istream&, automobil&);
+///    friend istream& operator>>(istream&, masina&);
+    static void afis_auto(){ cout<<"numarul total de automobile = "<<nra<<"\n";}
+};
+
+int automobil::nra = 0; /// int automobil::nra;
+
+class masina: public automobil
+{
+    static int nrm;
+int nrloc;
+    public:
+ ///   masina(){nrloc = 0; nrm++;}
+    masina() : automobil(){nrloc = 0; nrm++;}   /// si mai explicit
+ ///   masina(string s){nrloc = 0; nrm++;}  /// const parametrizat apeleaza by default constr de INITIALIZARE din clasa de baza, deci programatorul trebuie sa apeleze explicit
+    masina(string s) : automobil(s){nrloc = 0; nrm++;}
+///    masina(string s, float f, int i) : automobil(s,f) {nrloc = i; nrm++;}
+    masina(string s, float f, int i) : automobil(s,f) , nrloc(i) { nrm++; }  /// utilizat si pseudoconstructori pentru tipurile de baza
+    /// masina(const masina&); /// atentie: constr de copiere, explicit, din clasa derivata apeleaza contr de initializare din clasa de baza NU PE CEL DE COPIERE
+    masina(const masina& ob) : automobil(ob) { nrloc = ob.nrloc; nrm++;}
+    ~masina(){cout<<"\ndestructor derivata\n";}
+
+    masina& operator=(masina&);
+
+friend istream& operator>>(istream&, masina&);
+
+///    void afis(){cout<<marca<<"  "<<cap<<"  "<<nrloc<<"\n";}
+void afis(){ automobil::afis(); cout<<nrloc<<"\n";}   /// suprascrierea uni functii in clasa derivata o ascunde pe cea initiala, din clasa de baza, deci e nevoie de apel explicit
+static void afis_masini(){ cout<<"numarul total de masini = "<<nrm<<"\n";}
+};
+
+int masina::nrm;
+
+int main()
+{
+    /*
+    automobil a;
+    a.afis();
+
+    masina m1;
+    m1.afis();
+
+    masina m2 ("logan",2.3,5);
+//    m2.afis();
+
+    masina m3 = m2;  /// constr de copiere by default din derivata apeleaza constr de copiere by default sau EXPLICIT din baza
+//    m3.afis();
+
+    masina m4;
+    m4 = m3;   /// operatorul de atribuire by default din derivata apeleaza op= fie cel by default, fie cel EXPLICIT din baza
+    m4.afis();
+
+    masina m5;
+    cin>>m5;
+    m5.afis();
+
+    automobil::afis_auto();
+    m5.afis_auto();   /// m5 este ob de tip derivat --- la origine este ob de baza --- poate accesa functiile din clasa parinte
+    masina::afis_masini();
+    m5.afis_masini();*/
+
+/*
+    automobil a1("BMW",3.3);
+    masina m6("sandero",2.3,4);
+
+    automobil *p;
+    p = &a1;
+    p -> afis();
+
+    p = &m6;   /// upcasting - pointer catre clasa de baza retine adresa unei derivate;   folosesc memoria STACK
+    p -> afis();
+*/
+
+/// citirea, stocarea si afisarea a n obiecte
+
+    automobil **v;
+    int n, optiune;
+try
+{
+
+    cin>>n;
+    if (n<=0) throw 1;
+}
+catch(int x)
+{
+    cout<<"Dimensiunea vectorului nu poate fi nula sau negativa! Mai incercati o data";
+    /// atentie si la bad_alloc pt val negative
+}
+    v = new automobil* [n]; /// aloc n spatii care retin adrese de obiecte
+
+    for(int i = 0; i<n; i++)
+    {
+        cout<<"Dati optiune: ";
+        cin>>optiune;
+        if (optiune % 2 == 0) {
+            v[i] = new masina();   /// tot upcasting, doar ca utilizez memoria HEAP (new activeaza zona de memorie dinamica)
+            ///cin>>*(masina*)v[i];   /// apel la op de citire din clasa derivata ==> cast catre derivata* ===> "seamana" cu downcasting
+            cin>>*dynamic_cast<masina*>(v[i]);
+        }
+        else
+        {
+            v[i] = new automobil();
+            cin>>*v[i];
+        }
+ ///       cin>>v[i]; /// operator>>(cin, pointer la automobil), nu exista astfel de op
+ ///   cin>>*v[i];  /// pointer catre automobil, deci ia citirea doar din clasa de baza
+    }
+
+    for(int i = 0; i<n; i++)
+        v[i] -> afis();
+
+    masina::afis_masini();
+
+    return 0;
+}
+
+automobil::automobil()
+{
+    marca = "necunoscut";
+    cap = 1.9;
+    nra++;
+}
+
+/// const de init (by default sau EXPLICIT) din clasa derivata face automat apel la constr de initializare din clasa de baza, fie el IMPLICIT sau EXPLICIT
+/// destructorul din clasa derivata, implicit sau explicit, face AUTOMAT apel la destructorul din clasa de baza
+
+automobil::automobil(string s)
+{
+    marca = s;
+    cap = 1.9;
+    nra++;
+}
+
+automobil::automobil(string s, float f)
+{
+    marca = s;
+    cap = f;
+    nra++;
+}
+
+automobil::automobil(const automobil& ob)
+{
+    marca = ob.marca;
+    cap = ob.cap;
+    nra++;
+}
+
+/*
+masina::masina(const masina& ob)
+{
+    nrloc = ob.nrloc;
+}*/
+
+automobil& automobil::operator= (automobil& ob)
+{
+    if (this != &ob)
+    {
+         marca = ob.marca;
+        cap = ob.cap;
+    }
+    return *this;
+}
+
+masina& masina::operator=(masina& ob)
+{
+    if (this != &ob)
+    {
+        automobil::operator=(ob);   /// op= explicit din clasa derivata trebuie sa apeleze EXPLICIT operatorul= din clasa de baza
+        nrloc = ob.nrloc;
+    }
+    return *this;
+}
+
+istream& operator>>(istream& in, automobil& A)
+{
+    in>>A.marca>>A.cap;
+    return in;
+}
+
+istream& operator>>(istream& in, masina& M)
+{
+    ///in>>M.marca>>M.cap>>M.nrloc;  /// marca si cap private in clasa de baza, deci inaccesibile, deci antetul op sa fie pus si in clasa de baza
+
+    in>>(automobil&) M;  /// apel la op de citire din clasa de baza ==> cast catre baza& ===> "seamana" cu downcasting
+    in>>M.nrloc;
+    return in;
+}

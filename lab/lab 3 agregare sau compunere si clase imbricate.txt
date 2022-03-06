@@ -1,0 +1,38 @@
+#include <iostream>
+
+using namespace std;
+
+class Sofer
+{
+    string nume;
+    int varsta;
+    friend class Masina; /// a se utiliza cu masura
+                        /// mai bn getter sau setter (E SFANT)
+} s;
+
+class Masina
+{
+    Sofer s; ///compunere / agregare
+public:
+    void citire() {cin>>s.nume;}
+
+    /*class Sofer ///clasa locala, clase imbricate
+    {
+        string nume;
+        int varsta;
+    } s;
+    public:
+    void citire(){cin>>s.nume;}*/
+};
+
+class Autobuz
+{
+    Sofer s; ///nu se putea daca era clasa integrata in Masina
+};
+
+int main()
+{
+    Masina M;
+    M.citire();
+    return 0;
+}

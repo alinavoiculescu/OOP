@@ -1,0 +1,60 @@
+#include <iostream>
+#include "list.h"
+
+List::nod::nod(int value, nod* n)
+{
+    val = value;
+    urm = n;
+}
+
+List::List()
+{
+    p = NULL;
+    ult = NULL;
+    nrnod = 0;
+}
+
+List::List(unsigned int sizee, int value)
+{
+    p = new nod(value, NULL);
+    ult = p;
+    for(int i=1;i<sizee;++i)
+    {
+        nod *q = new nod(value, NULL);
+        ult->urm = q;
+        ult = q;
+    }
+    nrnod = sizee;
+}
+
+List::~List()
+{
+    std::cout<<"Destructorul a fost apelat";
+
+    while(nrnod != 0)
+    {
+        nod *aux;
+        aux = p->urm;
+        delete p;
+        p = aux;
+        nrnod--;
+    }
+    p = ult = NULL;
+}
+
+void List:Add(int value)
+{
+    nod *q = new nod(value, NULL);
+    
+    if(nrnod == 0)
+    {
+        p = q;
+        ult = q;
+    }
+    else
+    {
+        ult->urm = q;
+        ult = q;
+    }
+    ++nrnod;
+}

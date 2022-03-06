@@ -1,0 +1,156 @@
+#include <iostream>
+
+using namespace std;
+
+class Test
+{
+    int n;
+    int v[10];
+public:
+    friend istream& operator>>(istream&, Test&);
+    friend ostream& operator<<(ostream&, Test&);
+    Test& operator+=(int);  ///fct de atribuire pt functie membra
+    friend Test& operator-=(Test&, int);
+};
+
+Test& operator-=(Test& ob, int x)
+{
+    ob.n -=x;
+    return ob;
+}
+
+Test& Test::operator+=(int x)
+{
+    for (int i = 0; i < n; i++)
+        v[i] += x;
+    return *this;
+}
+
+istream& operator>>(istream& in, Test& ob)    //op de citire
+{
+    in>>ob.n;
+    for (int i = 0; i < ob.n; i++)
+        in>>ob.v[i];
+    return in;
+}
+
+ostream& operator<<(ostream& out, Test& ob)
+{
+    for(int i = 0; i < ob.n; i++)
+        out<<ob.v[i]<<" ";
+    out<<endl;
+    return out;
+}
+
+int main()
+{
+    Test A;
+    ///A>>cin; --> daca cin e fct membra
+    cin>>A; ///operator de citire>>(cin, A);
+            ///cin = flux de intrare = istream; A = obiect
+            ///cin>>A>>B; ///operator>>(operator>>(cin, A),B)
+    cout<<A; ///operator<<(cout,A);
+             ///cout = flux de iesire = ostream
+    A+=10;  ///A.operator+=(10)--> ca fct membra
+    cout<<A;
+    A-=2;   ///scade cu 2 dimensiunea vectorului
+            ///operator-=(A,int), functie prieten
+    cout<<A;
+    return 0;
+}
+
+
+/*
+class Test
+{
+    int n;
+    int *v;
+public:
+    Test(const Test& ob); //constr de copiere
+    Test(){ v = new int [10];} //constructor de initializare
+    ~Test(){ delete [] v;}  //destructor pt vector
+    //op de atribuire:
+
+    Test& operator = (Test&);
+
+
+    void citire();
+    void afisare();
+    friend void f(Test);
+    Test& g(Test);
+};
+
+void f(Test ob)     //functie care foloseste un ob de tip test
+{
+    cout<<endl<<ob.n<<endl; //constructor de copiere
+}
+
+Test& Test::g(Test ob) {return ob;}
+
+
+int main()
+{
+    Test A;
+    A.citire();
+    A.afisare();
+    f(A);
+    A.afisare();
+
+    Test B;
+    B = A.g(A);
+    B.afisare();
+
+    Test *X = new Test();   //alocarea dinamica a obiectelor
+    X -> citire();      //x e pointer
+    X -> afisare();
+
+    Test B(*X);  //apelez constructorul de copiere
+    Test E; //E este creat printr un constructor
+    //E = B;  //op de atribuire
+    E = *X;
+    E.afisare();
+    delete X;
+    B.afisare();
+
+    Test C(B);  //B e obiect, nu pointer, constr de copiere
+    C.afisare();
+
+    Test D = B; //constr de copiere
+    D.afisare();
+
+    return 0;
+}
+
+Test::Test(const Test& ob)      //constr de copiere
+{
+    n = ob.n;
+    v = new int[10];
+    for (int i = 0; i < n; i++)
+        v[i] = ob.v[i];
+}
+
+Test& Test::operator = (Test& ob)
+{
+    if (this != &ob)
+    {
+        n = ob.n;
+        v = new int[10];
+        for (int i = 0; i < n; i++)
+            v[i] = ob.v[i];
+    }
+    return *this;
+}
+
+
+void Test::citire()
+{
+    cin>>n;
+    for (int i = 0; i < n; i++)
+        cin>>v[i];
+}
+void Test::afisare()
+{
+    for (int i = 0; i < n; i++)
+        cout<<v[i]<<" ";
+    cout<<endl;
+}*/

@@ -1,0 +1,133 @@
+#include <iostream>
+
+using namespace std;
+
+class Test
+{
+    int x;
+    friend istream& operator>> (istream&, Test&);
+    friend ostream& operator<< (ostream&, Test&);
+    //ostream& operator<< (ostream&);
+};
+
+istream& operator>> (istream& in, Test& ob)
+{
+    in>>ob.x;
+    return in;
+}
+
+ostream& operator<< (ostream& out, Test& ob)
+{
+    out<<ob.x;
+    return out;
+}
+
+/*ostream& Test::operator<< (ostream& out)
+{
+    out<<x;
+    return out;
+}*/
+
+int main()
+{
+    Test ob;
+    cin>>ob;
+    cout<<ob;
+
+
+    return 0;
+}
+
+
+///clase si functii prieten
+
+/*class Test
+{
+    ///protected:
+    int x;
+    friend void f(Test a);
+
+    //friend class Test2;
+};
+
+class Test2
+{
+  int y;
+  public:
+      void f(Test a) {cout<<a.x;}
+};
+
+void f(Test a) {cout<<a.x;}
+void Test2::f(Test a) {cout<<a.x;}
+
+int main()
+{
+    Test ob;
+    f(ob);
+    Test2 ob2;
+    ob2.f(ob);
+    return 0;
+}
+
+/*///union ca si clasa
+/*
+class T
+{
+public:
+    ///T() {cout<<"C";}
+};
+
+union Test
+{
+    int x;
+    static int y;
+    T ob2;
+public:
+    void f() {cout<<"A"<<y<<endl;}
+};
+
+int Test::y;
+
+///union Test2: public Test {};    ///union nu permite mostenire
+
+int main()
+{
+    Test ob;
+    ob.f();
+
+    ///Test2 x;
+    ///x.f();
+    return 0;
+}
+
+
+///struct ca si clasa - diferenta date private by default
+/*class T
+{
+public:
+    T() {cout<<"C";}
+};
+
+struct Test
+{
+    int x;
+    static int y;
+    T ob2;
+public:
+    void f() {cout<<"A"<<" "<<y<<endl;}
+};
+
+int Test::y;
+
+struct Test2: public Test {};
+
+int main()
+{
+    Test ob;
+    ob.f();
+
+    Test2 x;
+    x.f();
+    return 0;
+}
+*/
